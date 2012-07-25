@@ -1,0 +1,134 @@
+----------------------------------------------------------------------------
+
+This is the credits file of people that have contributed to the SILC
+project.  Note that, having your name in this file does not give you
+automatically explicit or implicit copyright or ownership rights to the 
+SILC software.
+
+This file is supposed to by sorted by last name and of the following 
+format: name (N), email (E), web-address (W), PGP key ID and fingerprint (P),
+description (D), and snail-mail address (S).  The format is from the Linux
+kernel credits file. :)
+
+----------------------------------------------------------------------------
+
+N: Phil Bordelon
+E: sunflare@gentoo.org
+W: http://thenexusproject.org/non-canon/projects/phil
+P: 1024D/DFBBF00E D157 0278 CE03 DED4 F84D  06BD 8650 B1D4 DFBB F00E
+D: Copyediting of the website
+D: Recent maintenance of the Gentoo silc-client ebuild
+D: Busy convincing the world that SILC is The Future
+S: 13333 Brown Road
+S: Baker, LA 70714-6512
+S: United States of America
+
+N: Mika "Bostik" Boström
+E: bostik@lut.fi
+W: http://www.lut.fi/~bostik
+D: Server runs as a daemon on dedicated account
+D: Fixed inconsistencies in server side code routine names
+D: Man-pages
+S: Skinnarilankatu 28 E 2
+S: 53850 Lappeenranta
+S: Finland
+
+N: Jochen "c0ffee" Eisinger
+E: jochen@penguin-breeder.org
+W: http://penguin-breeder.org/
+D: maintainer of the SILC Client & SILC Plugin
+D: several new subtle bugs disguised as fixes and patches
+S: Haslacher Str. 45
+S: 79115 Freiburg
+S: Germany
+
+N: Giovanni Giacobbi
+E: giovanni@giacobbi.net
+P: 1024D/B2D79FC1 6247 640C 1C90 1EE4 D800  E4E2 2D58 3DF1 B2D7 9FC1
+D: silcconfig, silclog, various patches around
+D: RPM packages
+S: 35100 Padova
+S: Italy
+
+N: Pekka Riikonen
+E: priikone@silcnet.org
+E: priikone@iki.fi
+P: 1024/A924ED4F AD 82 53 2D 84 FF C7 D1  FF 63 19 0E 1A 78 9F 8A  A9 24 ED 4F
+D: Protocol architect
+D: Main developer
+D: SILCNet coordinator and administrator
+S: 70100 Kuopio
+S: Finland
+
+N: Juha Räsänen
+E: jmrasane@lut.fi
+D: Persistent nagger
+D: Desultory coder
+D: ElGamal implementation
+S: Laserkatu 4 A 4
+S: 53850 Lappeenranta
+S: Finland
+
+N: Ville Räsänen
+E: ville.rasanen@iki.fi
+D: Client side of STATS-command 
+D: Some ROBOdoc formatting
+D: Bughunting
+
+N: Lubomir Sedlacik
+E: salo@Xtrmntr.org
+E: salo@NetBSD.org
+W: http://Xtrmntr.org
+P: 1024/54BC7263 75 B2 2B 96 CD 75 03 85  1C 49 39 B8 8B 08 C3 0E  54 BC 72 63
+D: configure.in bugfixes
+D: NetBSD packages
+D: project server administrator
+D: mirrors coordinator
+S: 15000 Prague
+S: Czech Republic
+
+N: Timo Sirainen
+E: tss@iki.fi
+W: http://www.irssi.org
+D: Irssi/SILC client
+D: Several bugfixes
+S: Lintulahdenaukio 8 as 30
+S: 00500 Helsinki
+S: Finland
+
+N: Saku Ytti
+E: saku@ytti.fi
+D: wannabe 
+S: Pursimiehenkatu 16 d 60
+S: 00150 Helsinki
+S: Finland
+
+N: Tamas SZERB
+E: toma@rulez.org
+P: 1024D/69C0FA93 D75C E26A 13D7 56EA 4808  38C6 3ED7 0955 69C0 FA93
+D: bugfixes
+D: Debian packages
+D: wannabe
+S: Arnyas ut 38-40/H
+S: 1121 Budapest
+S: Hungary
+
+N: Patrik Weiskircher
+E: pat@icore.at
+P: 1024D/BF475975 3240 EE43 E979 C5B9 981F  12D5 EC14 B9CD BF47 5975
+D: patch for whois using attributes
+S: Kandlgasse 17/3
+S: 1070 Vienna
+S: Austria
+
+N: Toni Willberg
+W: http://toniw.iki.fi/
+E: toniw@iki.fi
+D: silc.atbusiness.com admin
+D: www.fi.silcnet.org admin
+D: Hunting the client library bugs while developing Silky.
+D: General whining.
+S: Helsinki
+S: Finland
+
+----------------------------------------------------------------------------

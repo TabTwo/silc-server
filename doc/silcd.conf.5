@@ -1,0 +1,727 @@
+.TH "SILCD_CONF" "5" "November 2 2002" "silc-server" "silc-server"
+
+.PP 
+.SH "NAME"
+silcd\&.conf \- format of configuration file for silcd
+.PP 
+.SH "CONFIGURATION FILE"
+\fBSilcd\fP reads its configuration from /etc/silc/silcd\&.conf (or the file
+specified with \fB-f\fP)\&. The file contains sections, subsections and key-value
+pairs\&. Each section or subsection is bound with a starting \fI{\fP and ending
+\fI}\fP\&. Keys and values are of the format \&'\fIKEY\fP=\fIVALUE\fP;\&'\&. All statements
+as well as sections must be terminated with a \&';\&'\&.
+.PP 
+Mandatory section in configuration file is \fIServerInfo\fP\&.  Other sections
+are optional but recommended\&.  If \fIGeneral\fP section is defined it must
+be defined before the \fIConnectionParams\fP section\&.  On the other hand,
+the \fIConnectionParams\fP section must be defined before \fIClient\fP,
+\fIServerConnection\fP and/or \fIRouterConnection\fP sections\&.  Other sections
+can be in a free order in the configuration file\&.
+.PP 
+.SH "SECTION: General"
+
+.PP 
+\fIGeneral\fP section contains global settings for the silcd\&.
+.PP 
+\fBdynamic_server\fP
+.RS 
+Dynamic router connections\&.  If this is set for normal SILC server
+the connection to primary router is not created untill it is actually
+needed\&.  Giving for example \fI/WHOIS foobar@silcnet\&.org\fP would then
+create connection to the primary router to resolve user foobar\&.
+On the other hand giving \fI/WHOIS foobar\fP would try to search the
+user foobar locally, without creating the connection\&.  Note that
+giving \fI/JOIN foobar\fP will also created the connection as current
+SILC Server version supports only global channels (all JOINs require
+connection to router, if one is configured)\&.
+.RE
+
+.PP 
+\fBprefer_passphrase_auth\fP
+.RS 
+If both public key and passphrase authentication are set for a
+connection, public key authentication is by default preferred\&. Setting this
+value to \fItrue\fP causes silcd to prefer passphrase authentication in these
+cases\&.
+.RE
+
+.PP 
+\fBrequire_reverse_lookup\fP
+.RS 
+Set this value to \fItrue\fP if all connecting hosts must have a fully
+qualified domain name (FQDN)\&. If set to true, a host without FQDN is not
+allowed to connect to server\&.
+.RE
+
+.PP 
+\fBconnections_max\fP
+.RS 
+Maximum number of incoming connections to this server\&. Any further
+connections are refused\&.
+.RE
+
+.PP 
+\fBconnections_max_per_host\fP
+.RS 
+Maximum number of incoming connections from any single host\&. This
+setting can be overridden on a connection-specific basis with
+\fIConnectionParams\fP\&.
+.RE
+
+.PP 
+\fBversion_protocol\fP
+.RS 
+Defines the minimum required version of protocol to allow connecting
+to server\&. A client or server using this version of protocol or newer is
+allowed to connect, one using anything older will be rejected\&. Leaving unset
+allows all versions to connect\&. This can be overridden with
+\fIConnectionParams\fP\&.
+.RE
+
+.PP 
+\fBversion_software\fP
+.RS 
+Defines the minimum required version of software to allow connecting
+to server\&. A client or server that is of this version or newer is allowed
+to connect, one using anything older will be rejected\&. Leaving unset allows
+all versions to connect\&.  This can be overridden with \fIConnectionParams\fP\&.
+.RE
+
+.PP 
+\fBversion_software_vendor\fP
+.RS 
+Defines the allowed software vendor string that is required to connect\&.
+Usually this is either a build number or special client tag\&. Using this
+requirement is not encouraged unless the server is in very limited use\&.
+Leaving unset allows all versions regardless of their vendor to connect\&.
+Can be overridden with \fIConnectionParams\fP\&.
+.RE
+
+.PP 
+\fBkey_exchange_rekey\fP
+.RS 
+Defines the interval, in seconds, how often the session key will be
+regenerated\&. This setting only applies to the connection initiator, as rekey
+is always performed by the initiating party\&. Setting has effect only when
+the server acts as an initiator, and can be overridden with
+\fIConnectionParams\fP\&.
+.RE
+
+.PP 
+\fBkey_exchange_pfs\fP
+.RS 
+Boolean value to determine, whether key-exchange is performed with
+Perfect Forward Secrecy (PFS) or without\&. If set to \fItrue\fP, the rekey
+process will be somewhat slower, but more secure since the key is
+entirely regenerated\&. Can be overridden with \fIConnectionParams\fP\&.
+.RE
+
+.PP 
+\fBkey_exchange_timeout\fP
+.RS 
+Key exchange timeout in seconds\&. If the key exchange is not completed
+within this time, the remote connection will be closed\&.
+.RE
+
+.PP 
+\fBconn_auth_timeout\fP
+.RS 
+Connection authentication timeout in seconds\&. If the connection
+authentication is not completed within this time, the remote connection
+will be closed\&.
+.RE
+
+.PP 
+\fBchannel_rekey_secs\fP
+.RS 
+Seconds, how often channel key will be regenerated\&. Note that channel
+key is regenerated each time someone joins or leaves the channel\&. This is
+the maximum time any channel can have the same key\&.
+.RE
+
+.PP 
+\fBdetach_disabled\fP
+.RS 
+Boolean value controlling, whether clients are denied the use of DETACH
+command\&. Default value is false (DETACH is allowed)\&.
+.RE
+
+.PP 
+\fBdetach_timeout\fP
+.RS 
+Time in seconds how long detached sessions will be available\&. By
+default, detached sessions do not expire and as such, are persistent as long
+as the server is running\&. If DETACH command is allowed, this value should
+be set as well\&.
+.RE
+
+.PP 
+\fBqos\fP
+.RS 
+Boolean value controlling, whether Quality of Service settings are
+enabled\&. Default setting is false\&. NOTE: If you enable QoS in general section,
+it applies to every connection the server has, including server connections\&.
+This setting can be overridden with \fIConnectionParams\fP and in case of
+server connections, it SHOULD BE overridden (server connections should not
+use QoS)\&.
+.RE
+
+.PP 
+\fBqos_rate_limit\fP
+.RS 
+Limits read operations per second to given amount\&. Do note that one read
+operation may read several SILC packets, so this setting does not
+automatically correspond to amount of messages transmitted or accepted\&.
+.RE
+
+.PP 
+\fBqos_bytes_limit\fP
+.RS 
+Limits incoming SILC data to the specified number of bytes per second\&.
+.RE
+
+.PP 
+\fBqos_limit_sec\fP
+.RS 
+This value defines the timeout, in seconds, for the delay of received
+data in case it was left in a QoS queue\&.
+.RE
+
+.PP 
+\fBqos_limit_usec\fP
+.RS 
+This value defines the timeout, in microseconds, for the delay of
+received data for received data in case it was left in a QoS queue\&.
+.RE
+
+.PP 
+.SH "SECTION: ServerInfo"
+
+.PP 
+\fIServerInfo\fP contains values for bound interfaces and administrative info\&.
+.PP 
+\fBhostname\fP
+.RS 
+Server\&'s name (FQDN)\&.
+.RE
+
+.PP 
+\fBServerType\fP
+.RS 
+This is a descriptive text field, usually telling what the server and
+its purpose are\&.
+.RE
+
+.PP 
+\fBLocation\fP
+.RS 
+Descriptive field of server\&'s geographic location\&.
+.RE
+
+.PP 
+\fBAdmin\fP
+.RS 
+Administrator\&'s full name\&.
+.RE
+
+.PP 
+\fBAdminEmail\fP
+.RS 
+Administrator\&'s email address\&.
+.RE
+
+.PP 
+\fBUser\fP
+.RS 
+The name of the user account silcd will be running on\&. This must be an
+existing user\&. Silcd needs to executed as root; after binding the port it
+will drop root privileges and use the account given here\&.
+.RE
+
+.PP 
+\fBGroup\fP
+.RS 
+The name of the group silcd will be running on\&. This must be an existing
+group\&. Silcd needs to be executed as root; after binding the port it will drop
+root privileges and use the group given here\&.
+.RE
+
+.PP 
+\fBPublicKey\fP
+.RS 
+Full path to server\&'s public key file\&.
+.RE
+
+.PP 
+\fBPrivateKey\fP
+.RS 
+Full path to server\&'s private key file\&.
+.RE
+
+.PP 
+\fBMotdFile\fP
+.RS 
+Full path to MOTD (Message Of The Day) file, a text file that will be
+displayed to each client upon connection\&.
+.RE
+
+.PP 
+\fBPidFile\fP
+.RS 
+Full path to file where silcd will write its PID\&.
+.RE
+
+.PP 
+.SH "SUBSECTION: Primary"
+
+.PP 
+This is the primary listener info\&. Each server can have no more than one \fIPrimary\fP
+section\&.
+.PP 
+\fBip\fP
+.RS 
+Specifies the address silcd is listening on\&.
+.RE
+
+.PP 
+\fBport\fP
+.RS 
+Specifies the port silcd is listening on\&.
+.RE
+
+.PP 
+\fBpublic_ip\fP
+.RS 
+Optional field\&.  If your server is behind NAT this IP would be 
+the public IP address\&.  The \&'ip\&' field would include the internal IP 
+address\&.  With this option it is possible to run silcd behind NAT 
+device\&.
+.RE
+
+.PP 
+.SH "SUBSECTION: Secondary"
+
+.PP 
+This is a secondary listener info\&. A server may have any amount of
+\fISecondary\fP listener settings\&. These are needed only if silcd needs
+to listen on several interfaces\&. \fISecondary\fP subsections have the same
+information that \fIPrimary\fP does\&.
+.PP 
+.SH "SECTION: Logging"
+
+.PP 
+This section is used to set up various log files; their paths, maximum
+sizes and individual logging options\&.
+.PP 
+There are four defined logging channels\&. The log channels have an
+importance value, and more important channels are always redirected to the
+less important ones\&. Setting a valid logging file for \fIInfo\fP will ensure
+logging for all channels, whereas a setting for \fIErrors\fP would only ensure
+logging for \fIErrors\fP and \fIFatals\fP\&.
+.PP 
+\fBTimestamp\fP
+.RS 
+A boolean value that dictates whether log lines will have timestamps
+prefixed\&. In general, this is a good idea\&. You might want to disable this
+if you are running silcd under some special logging daemon, such as
+daemontools\&.
+.RE
+
+.PP 
+\fBQuickLogs\fP
+.RS 
+A boolean value that determines how often log files are updated\&. Setting
+this to \fItrue\fP makes silcd log in real-time\&. Setting this to \fIfalse\fP makes
+silcd write to logs every \fIFlushDelay\fP seconds\&. Real-time logging causes a
+bit more CPU and HDD usage but reduces memory consumption\&.
+.RE
+
+.PP 
+\fBFlushDelay\fP
+.RS 
+Time in seconds, how often logs are flushed to logfiles\&. This setting
+has effect only if \fIQuickLogs\fP is disabled\&.
+.RE
+
+.PP 
+.SH "SUBSECTION: Info"
+.SH "SUBSECTION: Warnings"
+.SH "SUBSECTION: Errors"
+.SH "SUBSECTION: Fatals"
+Each of these subsections has the same attributes, \fIFile\fP and \fISize\fP\&.
+Different levels of problems are logged to their respective channels
+(\fIInfo\fP, \fIWarnings\fP, \fIErrors\fP, \fIFatals\fP), depending on their need
+of attention\&.
+.PP 
+\fBFile\fP
+.RS 
+Full path to log file\&.
+.RE
+
+.PP 
+\fBSize\fP
+.RS 
+Limit the size the log file is allowed to grow to\&. Any further messages
+to this file cause the oldest lines to be removed in order to keep the file
+size within given limit\&.
+.RE
+
+.PP 
+.SH "SECTION: ConnectionParams"
+
+.PP 
+This section defines connection parameters\&. Each connection may have its own
+set of \fIConnectionParams\fP but having one is in no way mandatory\&. If no
+separate parameters have been assigned, the defaults and the ones  from
+\fIGeneral\fP section will be used\&. A silcd configuration may have any number of
+\fIConnectionParams\fP sections\&.
+.PP 
+\fBname\fP
+.RS 
+This is a unique name that separates \fBthis\fP particular
+\fIConnectionParams\fP section from all the others\&. It is also the name with
+which settings are referred to a given set of parameters\&. This field is
+mandatory\&.
+.RE
+
+.PP 
+\fBconnections_max\fP
+.RS 
+Limits how many concurrent connections are allowed\&. Any further
+connections are simply refused\&. Note that this setting can not override the
+figure given in \fIGeneral\fP section\&.
+.RE
+
+.PP 
+\fBconnections_max_per_host\fP
+.RS 
+Maximum number of connections allowed from any single host\&. If this
+parameter is set for a block controlling server connections, it is highly
+suggested to use a value of one (1)\&.
+.RE
+
+.PP 
+\fBversion_protocol\fP
+.RS 
+Exactly the same as in \fIGeneral\fP section\&.
+.RE
+
+.PP 
+\fBversion_software\fP
+.RS 
+Exactly the same as in \fIGeneral\fP section\&.
+.RE
+
+.PP 
+\fBversion_software_vendor\fP
+.RS 
+Exactly the same as in \fIGeneral\fP section\&.
+.RE
+
+.PP 
+\fBkeepalive_secs\fP
+.RS 
+How often (seconds) to send HEARTBEAT packets to connected clients\&.
+.RE
+
+.PP 
+\fBreconnect_count\fP
+.RS 
+When connection is lost, how many times a reconnection is tried\&.
+.RE
+
+.PP 
+\fBreconnect_interval\fP
+.RS 
+How often, in seconds, a reconnection is attempted\&.
+.RE
+
+.PP 
+\fBreconnect_interval_max\fP
+.RS 
+Reconnection time is lengthened each time an unsuccessful attempt
+occurs\&. This value defines the maximum interval to which the delay may
+be prolonged\&.
+.RE
+
+.PP 
+\fBreconnect_keep_trying\fP
+.RS 
+Boolean value controlling whether server eventually gives up trying
+to reconnect\&. If set to \fIfalse\fP, server will give up once \fIreconnect_count\fP
+is reached or, even at maximum interval no connection is established\&.
+.RE
+
+.PP 
+\fBkey_exchange_rekey\fP
+.RS 
+Exactly the same as in \fIGeneral\fP section\&.
+.RE
+
+.PP 
+\fBkey_exchange_pfs\fP
+.RS 
+Exactly the same as in \fIGeneral\fP section\&.
+.RE
+
+.PP 
+\fBanonymous\fP
+.RS 
+This boolean setting has meaning only to client connections\&. If set to
+\fItrue\fP, client connections using this \fIConnectionParams\fP block will have
+their username and host scrambled\&. The client will also have an anonymous mode
+set to it\&.
+.RE
+
+.PP 
+\fBqos\fP
+.RS 
+Exactly the same as in \fIGeneral\fP section  NOTE: For server
+connection this should be set to \fIfalse\fP value\&.
+.RE
+
+.PP 
+\fBqos_rate_limit\fP
+.RS 
+Exactly the same as in \fIGeneral\fP section\&.
+.RE
+
+.PP 
+\fBqos_bytes_limit\fP
+.RS 
+Exactly the same as in \fIGeneral\fP section\&.
+.RE
+
+.PP 
+\fBqos_limit_sec\fP
+.RS 
+Exactly the same as in \fIGeneral\fP section\&.
+.RE
+
+.PP 
+\fBqos_limit_usec\fP
+.RS 
+Exactly the same as in \fIGeneral\fP section\&.
+.RE
+
+.PP 
+.SH "SECTION: Client"
+
+.PP 
+This section defines how incoming client connections are handled\&. There can
+be several \fIClient\fP sections, each with their own requirements\&. A \fBsilcd\fP
+admin could for example require that connections from certain IP-address space
+must supply a connection password\&.
+.PP 
+\fBHost\fP
+.RS 
+An address or wildcarded set of addresses, either in numeric IP-address
+fashion or as hostnames\&. For example \fI"10\&.1\&.*"\fP or
+\fI"*\&.mydomain\&.domain\&.org"\fP\&.
+.RE
+
+.PP 
+\fBPassphrase\fP
+.RS 
+The required passphrase to allow client connection\&.
+.RE
+
+.PP 
+\fBPublicKey\fP
+.RS 
+The path to a file containing the client\&'s public key\&. There can be any
+number of \fIPublicKey\fP statements in one \fIClient\fP section\&. Matching any of
+them will do\&.
+.RE
+
+.PP 
+\fBParams\fP
+.RS 
+Name of client connection parameters\&.
+.RE
+
+.PP 
+.SH "SECTION: ServerConnection"
+
+.PP 
+This section defines a configured server connection\&. A regular SILC
+server does not need one at all\&. If this block exists, it means that the
+server is a SILC router\&. There must be one \fIServerConnection\fP for each
+SILC server that connects to this router\&.
+.PP 
+\fBHost\fP
+.RS 
+Either an FQDN or strict IP-address of the connecting server\&.
+.RE
+
+.PP 
+\fBPassphrase\fP
+.RS 
+If server connection requires passphrase authentication, set it here\&.
+.RE
+
+.PP 
+\fBPublicKey\fP
+.RS 
+This is a path to connecting server\&'s public key\&. If server connection
+requires public key authentication, set this value\&. If both \fIPassphrase\fP
+and \fIPublicKey\fP are set, then either of them will be accepted\&.
+.RE
+
+.PP 
+\fBParams\fP
+.RS 
+Connection parameters\&.
+.RE
+
+.PP 
+\fBBackup\fP
+.RS 
+A boolean value controlling whether this server acts as a backup\&. Set
+to \fIfalse\fP for normal servers\&. If set to \fItrue\fP, this server is a backup
+router\&.
+.RE
+
+.PP 
+.SH "SECTION: RouterConnection"
+This section covers router connections\&. Stand-alone servers won\&'t have this
+section, and regular servers should only have one\&.
+.PP 
+Router servers need one \fIRouterConnection\fP for each other router they have
+been configured to connect to\&. First configured section is the primary route\&.
+.PP 
+\fBPort\fP
+.RS 
+If \fIInitiator\fP is set tro \fItrue\fP, this setting defines the remote
+port in which to connect\&. if \fIInitiator\fP is set to false, then this defines
+the local (listening) port\&.
+.RE
+
+.PP 
+\fBPassphrase\fP
+.RS 
+If connecting server requires a passphrase authentication, it is set
+here\&.
+.RE
+
+.PP 
+\fBPublicKey\fP
+.RS 
+If connecting to server requires public key authentication, the path
+to server\&'s public key file is set here\&.
+.RE
+
+.PP 
+\fBParams\fP
+.RS 
+Connection parameters\&.
+.RE
+
+.PP 
+\fBInitiator\fP
+.RS 
+A boolean setting that defines whether this server is the connecting
+party\&.
+.RE
+
+.PP 
+\fBBackupHost\fP
+.RS 
+If the configured connection is a backup connection, set this to the
+address of the main router that will be replaced\&. For normal router connection
+leave this option out\&.
+.RE
+
+.PP 
+\fBBackupPort\fP
+.RS 
+If the configured connection is a backup connection, set this to the
+remote port which to connect to\&. For normal router connection, leave this
+option out\&.
+.RE
+
+.PP 
+\fBBackupLocal\fP
+.RS 
+A boolean value\&. If this setting is \fItrue\fP, then the backup router
+is in the same cell\&. If the backup router is in another cell, set this
+to \fIfalse\fP\&. Needless to say, for normal router connection, leave this
+option out\&.
+.RE
+
+.PP 
+.SH "SECTION: Admin"
+
+.PP 
+This section defines configured administration connections\&.
+.PP 
+\fBHost\fP
+.RS 
+Either FQDN or a strict IP-address to the origin of connection\&.
+This field is optional\&.
+.RE
+
+.PP 
+\fBUser\fP
+.RS 
+Username that the connecting client announces\&. This field is optional\&.
+.RE
+
+.PP 
+\fBNick\fP
+.RS 
+Nickname that the connecting client announces\&. This field is optional\&.
+.RE
+
+.PP 
+\fBPassphrase\fP
+.RS 
+Passphrase required to obtain server operator privileges\&.
+.RE
+
+.PP 
+\fBPublicKey\fP
+.RS 
+Path to administrator\&'s public key file\&. If both \fIPassphrase\fP and
+\fIPublicKey\fP are defined, either one can be used\&.
+.RE
+
+.PP 
+.SH "SECTION: Deny"
+This section defines denied incoming connections\&. They apply equally to both
+client and server connections, so make sure you know what you add here\&. Each
+\fIDeny\fP section covers one instance of denied connection(s)\&. There may be any
+number of \fIDeny\fP sections\&.
+.PP 
+\fBHost\fP
+.RS 
+Address or wildcarded addresses of denied connections\&. \fBNOTE!\fP This
+field is not mandatory, but highly recommended\&. If you don\&'t specify \fIHost\fP
+at all, or give it a value of "*", you have a silcd that denies every single
+incoming connection\&.
+.RE
+
+.PP 
+\fBReason\fP
+.RS 
+A string giving the reason as to why the connecting party is not allowed
+to connect\&. Unlike \fIHost\fP, this field IS mandatory\&.
+.RE
+
+.PP 
+.SH "FILES"
+\fBsilcd\&.conf\fP
+.PP 
+.SH "SEE ALSO"
+\fBsilcd(8)\fP
+.PP 
+.SH "AUTHOR"
+SILC is designed and written by Pekka Riikonen <priikone@iki\&.fi> and rest
+of the SILC Project\&.
+.PP 
+Configuration file format and parser is by Giovanni Giacobbi
+<giovanni@giacobbi\&.net>\&.
+.PP 
+This manpage was written by Mika \&'Bostik\&' Boström <bostik@lut\&.fi>
+.PP 
+See \fBCREDITS\fP for full list of contributors\&.

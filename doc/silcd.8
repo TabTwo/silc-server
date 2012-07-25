@@ -1,0 +1,89 @@
+.TH "SILCD" "8" "November 20 2003" "silc-server" "silc-server"
+
+.PP 
+.SH "NAME"
+silcd \- SILC server
+.PP 
+.SH "SYNOPSIS"
+\fBsilcd\fP \fB[\fP -f \fIfile\fP | -d | -D | -x | -h | -F | -C \fIpath\fP | -V \fB]\fP
+.PP 
+.SH "DESCRIPTION"
+Silcd is a server for SILC, Secure Internet Live Conferencing network\&.
+.PP 
+.SH "OPTIONS"
+\fB-f\fP \fIFILE\fP   Read configuration from \fIFILE\fP
+.PP 
+\fB-d\fP        Enable debugging (Implies -F)
+.PP 
+\fB-D\fP \fILEVEL\fP  Enable debug messages of level \fILEVEL\fP and lower (Implies -F)
+.PP 
+\fB-x\fP        Enable hexdumps (Implies -d)
+.PP 
+\fB-F\fP        Don\&'t fork\&.  Run silcd on foreground\&.
+.PP 
+\fB-h\fP        Display help message
+.PP 
+\fB-V\fP        Display version
+.PP 
+\fB-C\fP \fIPATH\fP   Create new public key pair\&. See \fBKEY GENERATION\fP for options\&.
+.PP 
+.SH "LONG OPTIONS"
+\fB--config-file\fP=\fIFILE\fP      Same as \fB-f\fP
+.PP 
+\fB--debug\fP=\fISTRING\fP          Same as \fB-d\fP, limit to messages *\fISTRING\fP*
+.PP 
+\fB--debug-level\fP=\fILEVEL\fP     Same as \fB-D\fP
+.PP 
+\fB--hexdump\fP               Same as \fB-x\fP
+.PP 
+\fB--foreground\fP            Same as \fB-F\fP
+.PP 
+\fB--version\fP               Same as \fB-V\fP
+.PP 
+\fB--create-key-pair\fP=\fIPATH\fP  Same as \fB-C\fP
+.PP 
+.SH "KEY GENERATION"
+\fB-C\fP must be followed directly with a path to directory into which the
+private and public keys will be written to\&. When generating new key pair 
+for silcd (\fB-C\fP), the following extra switches apply:
+.PP 
+\fB--pkcs\fP=\fIPKCS\fP       Set the public key algorithm of public key pair\&.  For example \fBrsa\fP\&.
+.PP 
+\fB--bits\fP=\fIVALUE\fP      Set the length of public key pair, in bits\&.
+.PP 
+\fB--identifier\fP=\fIID\fP   Set \fIID\fP as public key identifier\&.
+.PP 
+The identifier has the format of:
+.PP 
+UN=<username>, HN=<hostname or IP>, RN=<real name>, E=<email>,
+O=<organization>, C=<country>
+.PP 
+Both UN and HN are mandatory, all the rest are optional but recommended\&.
+If no \fB--identifier\fP is used, an identifier will be created automatically\&.
+.PP 
+Example:
+.PP 
+\fBsilcd -C /etc/silcd --identifier\fP="UN=foobar, HN=foo\&.bar\&.com, 
+RN=Foo T\&. Bar, E=foo@bar\&.com, C=FI"
+.PP 
+.SH "FILES"
+There are two configuration files for silcd: 
+\fI/etc/silc/silcd\&.conf\fP for server configuration and
+\fI/etc/silc/silcalgs\&.conf\fP for SIM (SILC Modules) configuration\&. 
+Do note that silcalgs\&.conf is only needed if cryptographic algorithms are 
+built as separate modules\&.
+.PP 
+.SH "SEE ALSO"
+\fBsilc(1)\fP, \fBsilcd\&.conf(5)\fP
+.PP 
+.SH "NETWORK RESOURCES"
+Homepage: \fBhttp://silcnet\&.org\fP
+.PP 
+.SH "AUTHOR"
+SILC is designed and written by Pekka Riikonen <priikone@iki\&.fi> and rest
+of the SILC Project\&.
+.PP 
+This manpage was written by Mika \&'Bostik\&' Boström <bostik@lut\&.fi>
+.PP 
+See \fBCREDITS\fP for full list of contributors\&.
+.PP 

@@ -1,0 +1,43 @@
+commit b53c63ed53cdb7e589f6a5a743cc7fb43396927e
+Author: Pekka Riikonen <priikone@silcnet.org>
+Date:   Sat Sep 26 20:21:31 2009 +0300
+
+    silcd: Added heartbeat support
+    
+    Added support for sending SILC_PACKET_HEARTBEAT packets to connection,
+    to make sure they keep alive and to detect if they have died.
+
+commit bb61286f7ac90ebcdaa9b00991a9a98b6cd8663f
+Author: Pekka Riikonen <priikone@silcnet.org>
+Date:   Fri Sep 25 12:07:41 2009 +0300
+
+    Set SO_KEEPALIVE for all accept()ed sockets.
+
+commit dbcb39afedd5dba46a1c5e79e3ff7095c3e86454
+Author: Pekka Riikonen <priikone@silcnet.org>
+Date:   Fri Sep 25 12:05:38 2009 +0300
+
+    silcd: Fixed SIGUSR1 signal handling
+    
+    Fixed the SIGUSR1 signal handling which can be used to dump the server
+    internals to /tmp.
+    
+    Changed also End of Stream handling to handle NULL idata pointer instead
+    of ignoring the EOS in case it is NULL.
+    
+    Changed also the DETACH timeout handling to use the packet stream
+    directly instead of looking up client in the callback.
+
+commit 8cb801cf6482666818e721822ce81c81ec818908
+Author: Pekka Riikonen <priikone@silcnet.org>
+Date:   Fri Aug 7 14:48:46 2009 +0300
+
+    More string format fixes in silcd and client libary
+
+ apps/silcd/command.c            |   73 +++++-----
+ apps/silcd/packet_send.c        |   11 ++-
+ apps/silcd/server.c             |   35 ++++--
+ apps/silcd/server.h             |    4 +-
+ apps/silcd/server_internal.h    |    1 +
+ apps/silcd/server_util.h        |   14 ++-
+ apps/silcd/silcd.c              |   28 ++--
